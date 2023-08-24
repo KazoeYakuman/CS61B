@@ -25,11 +25,9 @@ public class Game {
     void playGame() {
         _model.clear();
         _model.addTile(getValidNewTile());
+        _model.addTile(getValidNewTile());
+        _model.notifyObservers();
         while (_playing) {
-            if (!_model.gameOver()) {
-                _model.addTile(getValidNewTile());
-                _model.notifyObservers();
-            }
 
             boolean moved;
             moved = false;
@@ -44,6 +42,7 @@ public class Game {
                     case "Up": case "Down": case "Left": case "Right":
                     case "\u2190": case "\u2191": case "\u2192": case "\u2193":
                         if (!_model.gameOver() && _model.tilt(keyToSide(cmnd))) {
+                            _model.addTile(getValidNewTile());
                             _model.notifyObservers(cmnd);
                             moved = true;
                         }
@@ -51,7 +50,7 @@ public class Game {
                     default:
                         break;
                 }
-
+                _model.notifyObservers();
             }
         }
     }
