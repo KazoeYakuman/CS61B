@@ -1,12 +1,14 @@
 package deque;
 
-import java.util.Iterator;
-public class ArrayDeque<Item> implements Iterable<Item>, Deque<Item> {
+import java.util.*;
+
+public class MaxArrayDeque<Item> implements Iterable <Item>, Deque<Item>{
     private Item[] items;
     private int size;
     private int head, tail;
+    Comparator<Item> comp;
 
-    public ArrayDeque() {
+    public MaxArrayDeque() {
         items = (Item[]) new Object[8];
         size = 0;
         tail = 0;
@@ -95,14 +97,46 @@ public class ArrayDeque<Item> implements Iterable<Item>, Deque<Item> {
         return items[(head + index) % items.length];
     }
 
-    public Iterator<Item> iterator() {
-        return new ArrayDequeIterator(head);
+    public MaxArrayDeque(Comparator<Item> c) {
+        items = (Item[]) new Object[8];
+        size = 0;
+        tail = 0;
+        head = 0;
+        comp = c;
     }
 
-    private class ArrayDequeIterator implements Iterator<Item> {
+    public Item max() {
+        if(size == 0) return null;
+        if(size == 1) return items[head];
+        Item ret = items[head];
+        for(int i = (head + 1) % items.length; i != tail; i = (i + 1) % items.length) {
+            if(comp.compare(items[i], ret) > 0) {
+                ret = items[i];
+            }
+        }
+        return ret;
+    }
+
+    public Item max(Comparator<Item> c) {
+        if(size == 0) return null;
+        if(size == 1) return items[head];
+        Item ret = items[head];
+        for(int i = (head + 1) % items.length; i != tail; i = (i + 1) % items.length) {
+            if(c.compare(items[i], ret) > 0) {
+                ret = items[i];
+            }
+        }
+        return ret;
+    }
+
+    public Iterator<Item> iterator() {
+        return new MaxArrayDeque.MaxArrayDequeIterator(head);
+    }
+
+    private class MaxArrayDequeIterator implements Iterator<Item> {
         int index;
 
-        ArrayDequeIterator(int idx) {
+        MaxArrayDequeIterator(int idx) {
             index = idx;
         }
         @Override
@@ -113,24 +147,6 @@ public class ArrayDeque<Item> implements Iterable<Item>, Deque<Item> {
         @Override
         public Item next() {
             return items[index ++];
-        }
-    }
-
-    public boolean equals(Object o) {
-        if(o instanceof ArrayDeque) {
-            ArrayDeque<Item> O = (ArrayDeque<Item>) o;
-            if(O.size() == size) {
-                for(int i = 0; i < size; i ++) {
-                    if(O.items[(O.head + i) % O.items.length] != items[(head + i) % items.length]) {
-                        return false;
-                    }
-                }
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
         }
     }
 }
