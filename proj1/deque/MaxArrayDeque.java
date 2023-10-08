@@ -2,7 +2,7 @@ package deque;
 
 import java.util.*;
 
-public class MaxArrayDeque<T> extends ArrayDeque<T> implements Iterable<T> {
+public class MaxArrayDeque<T> extends ArrayDeque<T> {
     private Comparator<T> comp;
 
     public MaxArrayDeque(Comparator<T> c) {
