@@ -1,24 +1,26 @@
 package deque;
 
 import java.util.Iterator;
-public class ArrayDeque<Item> implements Iterable<Item>, Deque<Item> {
-    private Item[] items;
+import java.util.Objects;
+
+public class ArrayDeque<T> implements Iterable<T>, Deque<T> {
+    private T[] items;
     private int size;
     private int head, tail;
 
     public ArrayDeque() {
-        items = (Item[]) new Object[8];
+        items = (T[]) new Object[8];
         size = 0;
         tail = 0;
         head = 0;
     }
 
     private void resize(int capacity) {
-        Item[] a = (Item[]) new Object[capacity];
+        T[] a = (T[]) new Object[capacity];
         int p = 0;
-        for(int i = head; i != tail; i = (i + 1) % items.length) {
+        for (int i = head; i != tail; i = (i + 1) % items.length) {
             a[p] = items[i];
-            p ++;
+            p++;
         }
         head = 0;
         tail = p;
@@ -26,23 +28,23 @@ public class ArrayDeque<Item> implements Iterable<Item>, Deque<Item> {
     }
 
     @Override
-    public void addFirst(Item item) {
-        if(size == items.length) {
+    public void addFirst(T item) {
+        if (size == items.length) {
             resize(size * 2);
         }
         head = (head - 1 + items.length) % items.length;
         items[head] = item;
-        size ++;
+        size++;
     }
 
     @Override
-    public void addLast(Item item) {
-        if(size == items.length) {
+    public void addLast(T item) {
+        if (size == items.length) {
             resize(size * 2);
         }
         items[tail] = item;
         tail = (tail + 1) % items.length;
-        size ++;
+        size++;
     }
 
     @Override
@@ -57,71 +59,72 @@ public class ArrayDeque<Item> implements Iterable<Item>, Deque<Item> {
 
     @Override
     public void printDeque() {
-        for(int i = head; i != tail; i = (i + 1) % items.length) {
+        for (int i = head; i != tail; i = (i + 1) % items.length) {
             System.out.print(items[i] + " ");
         }
         System.out.println("");
     }
 
     @Override
-    public Item removeFirst() {
-        if(size == 0) {
+    public T removeFirst() {
+        if (size == 0) {
             return null;
         }
-        Item ret = items[head];
+        T ret = items[head];
         head = (head + 1) % items.length;
-        size --;
-        if(items.length >= 16 && size * 4 <= items.length) {
+        size--;
+        if (items.length >= 16 && size * 4 <= items.length) {
             resize(items.length / 2);
         }
         return ret;
     }
 
     @Override
-    public Item removeLast() {
-        if(size == 0) {
+    public T removeLast() {
+        if (size == 0) {
             return null;
         }
         tail = (tail - 1 + items.length) % items.length;
-        size --;
-        if(items.length >= 16 && size * 4 <= items.length) {
+        size--;
+        if (items.length >= 16 && size * 4 <= items.length) {
             resize(items.length / 2);
         }
         return items[tail];
     }
 
     @Override
-    public Item get(int index) {
+    public T get(int index) {
         return items[(head + index) % items.length];
     }
 
-    public Iterator<Item> iterator() {
+    public Iterator<T> iterator() {
         return new ArrayDequeIterator(head);
     }
 
-    private class ArrayDequeIterator implements Iterator<Item> {
+    private class ArrayDequeIterator implements Iterator<T> {
         int index;
 
         ArrayDequeIterator(int idx) {
             index = idx;
         }
+
         @Override
         public boolean hasNext() {
             return index != tail;
         }
 
         @Override
-        public Item next() {
-            return items[index ++];
+        public T next() {
+            return items[index++];
         }
     }
 
     public boolean equals(Object o) {
-        if(o instanceof ArrayDeque) {
-            ArrayDeque<Item> O = (ArrayDeque<Item>) o;
-            if(O.size() == size) {
-                for(int i = 0; i < size; i ++) {
-                    if(O.items[(O.head + i) % O.items.length] != items[(head + i) % items.length]) {
+        if (o instanceof Deque) {
+            Deque<T> O = (Deque<T>) o;
+            if (O.size() == size) {
+                for (int i = 0; i < size; i++) {
+                    if (! Objects.equals(O.get(i), get(i))) {
                         return false;
                     }
                 }

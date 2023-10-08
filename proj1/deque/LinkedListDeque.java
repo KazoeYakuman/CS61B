@@ -1,13 +1,15 @@
 package deque;
 
 import java.util.Iterator;
+import java.util.Objects;
 
-public class LinkedListDeque<Item> implements Iterable<Item>, Deque<Item> {
-    public class Node {
-        public Item item;
+public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
+    private class Node {
+        public T item;
         public Node next;
         public Node pre;
-        public Node(Item i, Node p, Node n) {
+
+        public Node(T i, Node p, Node n) {
             item = i;
             next = n;
             pre = p;
@@ -26,22 +28,22 @@ public class LinkedListDeque<Item> implements Iterable<Item>, Deque<Item> {
         size = 0;
     }
 
-    private Item getR(int index, Node n) {
-        if(index == 0) {
+    private T getR(int index, Node n) {
+        if (index == 0) {
             return n.item;
         }
-        return getR(index-1, n.next);
+        return getR(index - 1, n.next);
     }
 
-    public Item getRecursive(int index) {
-        if(index >= size) {
+    public T getRecursive(int index) {
+        if (index >= size) {
             return null;
         }
         return getR(index, head.next);
     }
 
     @Override
-    public void addFirst(Item item) {
+    public void addFirst(T item) {
         Node tmp = new Node(item, head, head.next);
         tmp.pre.next = tmp;
         tmp.next.pre = tmp;
@@ -49,7 +51,7 @@ public class LinkedListDeque<Item> implements Iterable<Item>, Deque<Item> {
     }
 
     @Override
-    public void addLast(Item item) {
+    public void addLast(T item) {
         Node tmp = new Node(item, tail.pre, tail);
         tmp.pre.next = tmp;
         tmp.next.pre = tmp;
@@ -69,7 +71,7 @@ public class LinkedListDeque<Item> implements Iterable<Item>, Deque<Item> {
     @Override
     public void printDeque() {
         Node tmp = head.next;
-        while(tmp != tail) {
+        while (tmp != tail) {
             System.out.print(tmp.item + " ");
             tmp = tmp.next;
         }
@@ -77,11 +79,11 @@ public class LinkedListDeque<Item> implements Iterable<Item>, Deque<Item> {
     }
 
     @Override
-    public Item removeFirst() {
-        if(size == 0) {
+    public T removeFirst() {
+        if (size == 0) {
             return null;
         }
-        Item ret = head.next.item;
+        T ret = head.next.item;
         head.next = head.next.next;
         head.next.pre = head;
         size -= 1;
@@ -89,11 +91,11 @@ public class LinkedListDeque<Item> implements Iterable<Item>, Deque<Item> {
     }
 
     @Override
-    public Item removeLast() {
-        if(size == 0) {
+    public T removeLast() {
+        if (size == 0) {
             return null;
         }
-        Item ret = tail.pre.item;
+        T ret = tail.pre.item;
         tail.pre = tail.pre.pre;
         tail.pre.next = tail;
         size -= 1;
@@ -101,50 +103,47 @@ public class LinkedListDeque<Item> implements Iterable<Item>, Deque<Item> {
     }
 
     @Override
-    public Item get(int index) {
-        if(index >= size) {
+    public T get(int index) {
+        if (index >= size) {
             return null;
         }
         Node tmp = head.next;
-        for(int i = 0; i < index; i ++) {
+        for (int i = 0; i < index; i++) {
             tmp = tmp.next;
         }
         return tmp.item;
     }
 
-    public Iterator<Item> iterator() {
+    public Iterator<T> iterator() {
         return new LinkedListDequeIterator(0);
     }
 
-    private class LinkedListDequeIterator implements Iterator<Item> {
+    private class LinkedListDequeIterator implements Iterator<T> {
         int index;
 
         LinkedListDequeIterator(int idx) {
             index = idx;
         }
+
         @Override
         public boolean hasNext() {
             return index < LinkedListDeque.this.size();
         }
 
         @Override
-        public Item next() {
+        public T next() {
             return LinkedListDeque.this.get(index++);
         }
     }
 
     public boolean equals(Object o) {
-        if(o instanceof LinkedListDeque) {
-            LinkedListDeque<Item> O = (LinkedListDeque<Item>) o;
-            if(O.size() == size) {
-                Node tmp1 = O.head.next;
-                Node tmp2 = head.next;
-                for(int i = 0; i < size; i ++) {
-                    if(! tmp1.item.equals(tmp2.item)) {
+        if (o instanceof Deque) {
+            Deque<T> O = (Deque<T>) o;
+            if (O.size() == size) {
+                for (int i = 0; i < size; i++) {
+                    if (! Objects.equals(O.get(i), get(i))) {
                         return false;
                     }
-                    tmp1 = tmp1.next;
-                    tmp2 = tmp2.next;
                 }
                 return true;
             } else {
