@@ -5,11 +5,11 @@ import java.util.Objects;
 
 public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
     private class Node {
-        public T item;
-        public Node next;
-        public Node pre;
+        private T item;
+        private Node next;
+        private Node pre;
 
-        public Node(T i, Node p, Node n) {
+        Node(T i, Node p, Node n) {
             item = i;
             next = n;
             pre = p;
@@ -56,11 +56,6 @@ public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
         tmp.pre.next = tmp;
         tmp.next.pre = tmp;
         size += 1;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return size == 0;
     }
 
     @Override
@@ -141,7 +136,7 @@ public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
             Deque<T> O = (Deque<T>) o;
             if (O.size() == size) {
                 for (int i = 0; i < size; i++) {
-                    if (! Objects.equals(O.get(i), get(i))) {
+                    if (!Objects.equals(O.get(i), get(i))) {
                         return false;
                     }
                 }
