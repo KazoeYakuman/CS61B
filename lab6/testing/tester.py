@@ -382,7 +382,6 @@ if __name__ == "__main__":
     verbose = False
     src_dir = 'src'
     output_tolerance = 0
-
     try:
         opts, files = \
             getopt(sys.argv[1:], '',

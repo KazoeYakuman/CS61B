@@ -11,7 +11,7 @@ SHELL = /bin/bash
 JFLAGS = -ea
 
 # See comment in ../Makefile
-PYTHON = python3
+PYTHON = python
 
 RMAKE = "$(MAKE)"
 
@@ -19,7 +19,9 @@ TESTER = $(PYTHON) tester.py
 
 TESTER_FLAGS =
 
-SRCDIR = our-src
+SRCDIR = our
+
+CLASSPATH = "D:/APPs/Eclipse Adoptium/jdk-17.0.8.7-hotspot/lib/dt.jar"
 
 TESTS = our/*.in
 
@@ -34,6 +36,7 @@ check:
 	@CLASSPATH=..:$(CLASSPATH) java -ea capers.Main >/dev/null 2>&1 || true
 	@echo "Testing application capers.Main..."
 	$(TESTER) $(TESTER_FLAGS) --src=$(SRCDIR) $(TESTS)
+	@echo "Run Test Success"
 
 # 'make clean' will clean up stuff you can reconstruct.
 clean:
